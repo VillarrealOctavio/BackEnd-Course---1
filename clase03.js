@@ -15,13 +15,20 @@ class ProductManager {
 
     addProduct(title, description, price, thumbnail, code, stock = 50){
         const product = {
-          title,
-          description,
-          price,
-          thumbnail,
-          code,
-          stock,  
-          id: this.#getID,
+            title,
+            description,
+            price,
+            thumbnail,
+            code,
+            stock,  
+            id: this.#getID(),
+          };
+        const findCode = this.products.findIndex(
+            (obj) => obj.code === code
+        );
+        if (findCode != -1){
+            console.log("The product alredy exists")
+            return;
         };
         this.products.push(product);
     };
@@ -38,15 +45,16 @@ class ProductManager {
         if(productIndex === -1){
             console.log("¡Not Found!");
             return;  
-        }
-
+        };
         const product = this.products[productIndex]; 
         console.log(product);
-        this.products.push(product);
-
     };
 }
 
 const productManager = new ProductManager();
-productManager.addProduct("Mate","Mate de Plástico", 200,`ruta a definir`, 8, 50);
+//productManager.addProduct("Mate","Mate de Plástico", 200,`ruta a definir`, 8, 50);
+productManager.addProduct("Termo","Termo rojo", 500,`ruta a definir`, 16, 50);
+productManager.addProduct("Bolso","Bolso Desarmable", 1000,`ruta a definir`, 8, 50);
+//productManager.getProductById(3);
+//productManager.getProductById(2);
 console.log(productManager.getProducts());
