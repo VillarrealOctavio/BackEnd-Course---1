@@ -19,7 +19,7 @@ let values2 = myArray.map(myFunction);
 console.log(values2);
 */
 
-//-HACIENDO NUESTRO PROPIO MAP--
+/*-HACIENDO NUESTRO PROPIO MAP--
 let myArray = [1,2,3,4,5,6];
 const myMap = (array, callback) =>{
     let newArray = [];
@@ -36,3 +36,4 @@ const myFunction = (x) =>{
 
 let values = myMap(myArray, myFunction);
 console.log(values);
+*/
