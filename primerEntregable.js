@@ -1,3 +1,4 @@
+ /*
  class ProductManager {
 
     //VARIABLES PRIVADAS
@@ -63,3 +64,4 @@ productManager.addProduct("Mate","Mate de Alpáca",`ruta a definir`, 8, 50);
 productManager.getProductById(3);
 productManager.getProductById(2);
 console.log(productManager.getProducts());
+*/
