@@ -1,4 +1,5 @@
 const fs = require(`fs`);
+const { get } = require("http");
 
 class ProductManager {
 
@@ -17,9 +18,9 @@ class ProductManager {
     async getProducts(){
         try{
             const actualProducts = await fs.promises.readFile(this.path,`utf-8`)
-            return JSON.parse(actualProducts);
+            return JSON.parse(actualProducts); 
         }
-        catch{
+        catch(err){
             console.log(`We could not get the array of products.`)
         }
     };
@@ -47,6 +48,7 @@ class ProductManager {
                     return;
                 };
                 productArray.push(product);
+                console.log(productArray);
                 await fs.promises.writeFile(this.path, JSON.stringify(productArray))
             } else {
                 console.log("Something went wrong. Fill in every parameter");
@@ -58,8 +60,8 @@ class ProductManager {
           }
     };
 
-    async #getID() {
-        await this.#id++
+    #getID() {
+        this.#id++
         return this.#id;
     };
 
@@ -68,8 +70,9 @@ class ProductManager {
     async getProductById(idProduct){
         try{
             const foundArray = await this.getProducts();
+            console.log(foundArray);
             let productIndex = await foundArray.findIndex(
-                (product) => product.id === idProduct
+                (product) => product.id == idProduct
             );
             if(productIndex === -1){
                 console.log("¡Not Found!");
@@ -117,28 +120,47 @@ class ProductManager {
             console.log(`The product does not exist.`)
         }
         }
-        catch{
+        catch(err){
             console.log(`We could not delete the product by its id.`)
         }
     };
 }
 
 const mates = new ProductManager();
-mates.addProduct("Mate","Mate de Plástico", 200,`ruta a definir`, 8, 50);
-const test = async () => {
+const test1 = async () => {
 	// intento
 	try {
 		// Agregar mate
 		await mates.addProduct("Mate","Mate de Plástico", 200,`ruta a definir`, 8, 50);
-		// Agregar termo
-        await mates.addProduct("Mate","Mate de Vidrio", 400,`ruta a definir`, 5, 50);
+	} catch (err) {
+		// Si hay error imprimo el error en consola
+		console.log('Something went wrong with test1.');
+	}
+};
+
+const test2 = async (num) => {
+	// intento
+	try {
+		// Elimino un producto
+		await mates.getProductById(num);
 		// Imprimo los productos que administra
 		console.log(await mates.getProducts());
 	} catch (err) {
 		// Si hay error imprimo el error en consola
-		console.log('Salio mal el Test');
+		console.log('Something went wrong with test2.');
 	}
 };
 
+const test3 = async () => {
+    try{
+        console.log(await mates.getProducts());
+    }
+    catch(err){
+        console.log(`Something went wrong with test3.`)
+    }
+};
 // Ejecuto el test
-test();
+test1();
+test3();
+
+
