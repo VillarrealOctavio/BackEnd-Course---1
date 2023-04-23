@@ -1,5 +1,6 @@
 const fs = require(`fs`);
 const { get } = require("http");
+const { test } = require("node:test");
 
 class ProductManager {
 
@@ -47,8 +48,7 @@ class ProductManager {
                     console.log("The product alredy exists")
                     return;
                 };
-                productArray.push(product);
-                console.log(productArray);
+                await productArray.push(product);
                 await fs.promises.writeFile(this.path, JSON.stringify(productArray))
             } else {
                 console.log("Something went wrong. Fill in every parameter");
@@ -89,17 +89,18 @@ class ProductManager {
     /* */
     async updateProduct(idProduct, about){
         try{
-            const newUpdatedProduct = about;
+            const newUpdatedProduct = await about;
             const arrayOfProducts = await this.getProducts();
             const oldProduct = await arrayOfProducts.find((product) => product.id === idProduct);
             if(oldProduct == undefined){
                 console.log(`The product you are trying to modify, does not exist.`)
                 return;
             }
-            const mergedProduct = {...oldProduct,...newUpdatedProduct}; 
+            const mergedProduct = await {...oldProduct,...newUpdatedProduct}; 
             await this.deleteProduct(idProduct);
             arrayOfProducts = await this.getProducts();
             await arrayOfProducts.push(mergedProduct);
+            console.log(arrayOfProducts);
             await fs.promises.writeFile(this.path, JSON.stringify(arrayOfProducts))
         }
         catch (err) {
@@ -126,12 +127,17 @@ class ProductManager {
     };
 }
 
+
+
 const mates = new ProductManager();
+
 const test1 = async () => {
 	// intento
 	try {
 		// Agregar mate
 		await mates.addProduct("Mate","Mate de Plástico", 200,`ruta a definir`, 8, 50);
+        await mates.addProduct("Mate","Mate de Vidrio", 350,`ruta a definir`, 7, 50);
+        await mates.addProduct("Mate","Mate de Cerámica", 120,`ruta a definir`, 6, 50);
 	} catch (err) {
 		// Si hay error imprimo el error en consola
 		console.log('Something went wrong with test1.');
@@ -143,8 +149,6 @@ const test2 = async (num) => {
 	try {
 		// Elimino un producto
 		await mates.getProductById(num);
-		// Imprimo los productos que administra
-		console.log(await mates.getProducts());
 	} catch (err) {
 		// Si hay error imprimo el error en consola
 		console.log('Something went wrong with test2.');
@@ -159,8 +163,36 @@ const test3 = async () => {
         console.log(`Something went wrong with test3.`)
     }
 };
+
+const test4 = async (num) => {
+    try{
+        await mates.deleteProduct(num);
+    }
+    catch(err){
+        console.log(`Something went wrong with test4.`)
+    }
+};
+
+const test5 = async (idProduct, object) => {
+    try{
+        await mates.updateProduct(idProduct,object)
+    }
+    catch{
+        console.log(`Something went wrong with test5`)
+    }
+};
+
 // Ejecuto el test
-test1();
-test3();
+const executeTest = async () => {
+    try{
+        await test1();
+        console.log(`Done test1`)
+        await test3();
+        console.log(`Done test3`)
+    }
+    catch (err) {
+        console.log(`Something went wrong with the testings`)
+    }
+}
 
-
+executeTest();
